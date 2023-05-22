@@ -1,3 +1,54 @@
 from django.contrib import admin
 
 # Register your models here.
+from ShopApp.models import CustomUser, Image, Category, Material, \
+    Color, Product, Order, ProductInOrder, Cart, ProductInCart, Review
+
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'price', 'category', 'material', 'color', 'seller']
+    list_filter = ['category', 'material', 'color', 'seller']
+    search_fields = ['name', 'category__name', 'material__name', 'color__name', 'seller__username']
+
+    def has_change_permission(self, request, obj=None):
+        if obj and (request.user == obj.seller):
+            return True
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        if obj and (request.user == obj.seller):
+            return True
+        if request.user.is_superuser:
+            return True
+        return False
+
+
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ['product', 'customer', 'rating', 'comment']
+    list_filter = ['product', 'customer']
+    search_fields = ['product__name', 'user__username']
+
+    def has_change_permission(self, request, obj=None):
+        if obj and (request.user == obj.customer.user):
+            return True
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        if obj and (request.user == obj.customer.user):
+            return True
+        if request.user.is_superuser:
+            return True
+        return False
+
+
+admin.site.register(CustomUser)
+admin.site.register(Image)
+admin.site.register(Category)
+admin.site.register(Material)
+admin.site.register(Color)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Order)
+admin.site.register(ProductInOrder)
+admin.site.register(Cart)
+admin.site.register(ProductInCart)
+admin.site.register(Review, ReviewAdmin)
