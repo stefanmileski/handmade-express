@@ -16,6 +16,7 @@
                     <p>{{ product.description }}</p>
                     <p>Seller: <a class="text-decoration-none text-success"
                                   href="../users/{{ product.seller }}">{{ product.seller.full_name }}</a></p>
+                    <p>Rating: <a class="text-decoration-none text-success" href="{% url "reviews" product.slug %}">{{ product.calculate_average_rating }}</a></p>
                 </div>
                 <div class="pt-5 mt-5">
                     <div class="d-flex justify-content-between">

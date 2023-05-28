@@ -1,7 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.timezone import now
 
 
 # Create your models here.
@@ -55,6 +54,12 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     sold = models.IntegerField(default=0)
     slug = models.SlugField(max_length=200, unique=True)
+
+    def calculate_average_rating(self):
+        total = 0
+        for review in self.reviews.all():
+            total += review.rating
+        return total / len(self.reviews.all()) if len(self.reviews.all()) > 0 else 0
 
     def __str__(self):
         return str(self.name)

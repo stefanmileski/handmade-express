@@ -2,18 +2,12 @@ import random
 
 from django.shortcuts import render
 
-from ShopApp.models import Category, Product, Review
+from ShopApp.models import Category, Product
 
-from ShopApp.functions import get_average_rating
-
-
-# Create your views here.
 
 def index(request):
     items = list(Product.objects.order_by('-sold')[:5])
     random.shuffle(items)
-
-    items = get_average_rating(items)
 
     return render(request, 'ShopApp/index.html', {
         "products": items
@@ -25,8 +19,6 @@ def products(request, search_term=None):
         items = Product.objects.filter(name__icontains=search_term)
     else:
         items = Product.objects.all()
-
-    items = get_average_rating(items)
 
     return render(request, 'ShopApp/products.html', {
         "products": items
@@ -49,15 +41,23 @@ def category_list(request, slug):
     category = Category.objects.get(slug=slug)
     items = list(Product.objects.filter(category=category))
 
-    items = get_average_rating(items)
-
     return render(request, 'ShopApp/category_list.html', {
         "products": items,
         "category": category
     })
 
 
-def user_profile(request):
+def reviews(request, slug):
+    product = Product.objects.get(slug=slug)
+    reviews_list = list(product.reviews.all())
+    reviews_list.sort(key=lambda x: x.created_at)
+    return render(request, 'ShopApp/product_reviews.html', {
+        "product": product,
+        "reviews": product.reviews.all()
+    })
+
+
+def user_profile(request, slug):
     return render(request, 'ShopApp/user_profile.html', {
         "user": request.user
     })
