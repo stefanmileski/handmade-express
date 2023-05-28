@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from ShopApp.models import CustomUser, Image, Category, Material, \
+from ShopApp.models import CustomUser, Category, Material, \
     Color, Product, Order, ProductInOrder, Cart, ProductInCart, Review
 
 
@@ -16,9 +16,9 @@ class ProductAdmin(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        if obj and (request.user == obj.seller):
-            return True
         if request.user.is_superuser:
+            return True
+        if obj and (request.user == obj.seller):
             return True
         return False
 
@@ -34,15 +34,14 @@ class ReviewAdmin(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        if obj and (request.user == obj.customer.user):
-            return True
         if request.user.is_superuser:
+            return True
+        if obj and (request.user == obj.customer.user):
             return True
         return False
 
 
 admin.site.register(CustomUser)
-admin.site.register(Image)
 admin.site.register(Category)
 admin.site.register(Material)
 admin.site.register(Color)

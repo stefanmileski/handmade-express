@@ -15,13 +15,6 @@ class CustomUser(models.Model):
         return str(self.user)
 
 
-class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
-
-    def __str__(self):
-        return str(self.image)
-
-
 class Category(models.Model):
     name = models.CharField(max_length=200)
 
@@ -51,7 +44,7 @@ class Product(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=10)
     quantity = models.IntegerField()
     description = models.TextField()
-    images = models.ManyToManyField(Image)
+    image = models.ImageField(upload_to='images/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
@@ -144,7 +137,7 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(null=True, blank=True)
-    images = models.ManyToManyField(Image, null=True, blank=True)
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
     # Add other necessary fields for your application
 
     # Relationships
