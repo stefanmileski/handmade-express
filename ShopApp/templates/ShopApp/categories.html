@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}
+    Categories - HandmadeExpress
+{% endblock %}
+{% block content %}
+    <section>
+        <div class="container mt-4 d-flex flex-column">
+            {% for category in categories %}
+                {% include "ShopApp/includes/category.html" %}
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

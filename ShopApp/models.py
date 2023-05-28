@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -10,6 +11,7 @@ class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
+    full_name = models.CharField(max_length=200)
 
     def __str__(self):
         return str(self.user)
@@ -42,13 +44,16 @@ class Color(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=200)
     price = models.DecimalField(decimal_places=2, max_digits=10)
-    quantity = models.IntegerField()
+    quantity = models.PositiveIntegerField()
     description = models.TextField()
     image = models.ImageField(upload_to='images/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='products')
+    created_at = models.DateTimeField(auto_now_add=True)
+    sold = models.IntegerField(default=0)
+    slug = models.SlugField(max_length=200, unique=True)
 
     def __str__(self):
         return str(self.name)
