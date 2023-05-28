@@ -19,6 +19,7 @@ class CustomUser(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:  # New, 1
         verbose_name_plural = 'Categories'

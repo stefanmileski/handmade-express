@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ category.name }} - HandmadeExpress
+{% endblock %}
+
+{% block content %}
+
+    <div class="mt-3 container">
+        {% for product in products %}
+            {% include "ShopApp/includes/product.html" %}
+        {% endfor %}
+    </div>
+{% endblock %}

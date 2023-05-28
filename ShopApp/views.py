@@ -34,8 +34,11 @@ def categories(request):
 
 
 def category_list(request, slug):
+    category = Category.objects.get(slug=slug)
+    items = list(Product.objects.filter(category=category))
     return render(request, 'ShopApp/category_list.html', {
-        "category": Category.objects.get(slug=slug)
+        "products": items,
+        "category": category
     })
 
 def user_profile(request):

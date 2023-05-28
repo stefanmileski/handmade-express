@@ -3,8 +3,9 @@
     Categories - HandmadeExpress
 {% endblock %}
 {% block content %}
-    <section>
-        <div class="container mt-4 d-flex flex-column">
+    <section class="container mt-3">
+        <h3 class="text-success">Categories</h3>
+        <div class="mt-4 d-flex flex-column">
             {% for category in categories %}
                 {% include "ShopApp/includes/category.html" %}
             {% endfor %}
