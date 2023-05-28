@@ -148,7 +148,7 @@ class Review(models.Model):
 
     # Relationships
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
 
     def __str__(self):
         return f"Review #{self.id}: {self.rating} stars"
