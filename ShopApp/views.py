@@ -1,8 +1,12 @@
 import random
 
-from django.shortcuts import render
+from django.contrib.auth import logout
+from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import render, redirect
 
-from ShopApp.models import Category, Product
+from ShopApp.models import Category, Product, CustomUser, Cart
+
+from django.db.models import Q
 
 
 def index(request):
@@ -14,12 +18,12 @@ def index(request):
     })
 
 
-def products(request, search_term=None):
+def products(request):
+    search_term = request.GET.get('search_term')
     if search_term:
-        items = Product.objects.filter(name__icontains=search_term)
+        items = Product.objects.filter(Q(name__icontains=search_term) | Q(description__icontains=search_term))
     else:
         items = Product.objects.all()
-
     return render(request, 'ShopApp/products.html', {
         "products": items
     })
@@ -57,7 +61,45 @@ def reviews(request, slug):
     })
 
 
-def user_profile(request, slug):
-    return render(request, 'ShopApp/user_profile.html', {
-        "user": request.user
+def seller_profile(request, seller_username):
+    seller = CustomUser.objects.get(user__username=seller_username)
+    seller_products = list(seller.products.all())
+    s_after_apostrophe = not seller.full_name.endswith('s')
+    return render(request, 'ShopApp/seller_profile.html', {
+        "seller": seller,
+        "products": seller_products,
+        "s_after_apostrophe": s_after_apostrophe,
+    })
+
+
+# def login(request):
+#     return render(request, 'ShopApp/login.html')
+#
+
+def cart(request):
+    user_cart = CustomUser.objects.get(user=request.user).cart
+    return render(request, 'ShopApp/cart.html', {
+        "cart": user_cart
+    })
+
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        # Specify the URL where you want to redirect after login
+        return '/'
+
+    def form_valid(self, form):
+        # Add any additional logic you need before login
+        return super().form_valid(form)
+
+
+def logout_view(request):
+    logout(request)
+    # Specify the URL where you want to redirect after logout
+    return redirect('/')
+
+
+def orders(request):
+    return render(request, 'ShopApp/orders.html', {
+        "orders": CustomUser.objects.get(user=request.user).orders.all()
     })

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Cart - HandmadeExpress
+{% endblock %}
+
+{% block content %}
+    <p class="text-light">{{ cart }}</p>
+    {% for product in cart.products %}
+        {% include 'ShopApp/includes/cart_item.html' %}
+    {% endfor %}
+{% endblock %}

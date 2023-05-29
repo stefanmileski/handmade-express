@@ -2,6 +2,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -13,7 +16,7 @@ class CustomUser(models.Model):
     full_name = models.CharField(max_length=200)
 
     def __str__(self):
-        return str(self.user)
+        return f"{self.full_name} ({self.user.username})"
 
 
 class Category(models.Model):
@@ -43,8 +46,8 @@ class Color(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
-    price = models.DecimalField(decimal_places=2, max_digits=10)
-    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(decimal_places=2, max_digits=10, validators=[MinValueValidator(0)])
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     description = models.TextField()
     image = models.ImageField(upload_to='images/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -53,20 +56,25 @@ class Product(models.Model):
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='products')
     created_at = models.DateTimeField(auto_now_add=True)
     sold = models.IntegerField(default=0)
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(default="", max_length=200, unique=True)
 
     def calculate_average_rating(self):
+        if len(self.reviews.all()) == 0:
+            return 'No reviews yet'
         total = 0
         for review in self.reviews.all():
             total += review.rating
         return total / len(self.reviews.all()) if len(self.reviews.all()) > 0 else 0
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return str(self.name)
 
 
 class Order(models.Model):
-    # Fields
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=100,
@@ -74,14 +82,10 @@ class Order(models.Model):
                                        ('Processing', 'Processing'),
                                        ('Delivered', 'Delivered'),
                                        ('Cancelled', 'Cancelled')])
-    # Add other necessary fields for your application
-
-    # Relationships
-    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
     products = models.ManyToManyField(Product, through='ProductInOrder', related_name='orders')
 
     def calculate_total(self):
-        # Perform the necessary calculations to get the total price
         total = 0
         for product_in_order in self.productinorder_set.all():
             total += product_in_order.subtotal()
@@ -107,13 +111,10 @@ class ProductInOrder(models.Model):
 
 
 class Cart(models.Model):
-    # Fields
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # Add other necessary fields for your application
 
-    # Relationships
-    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='cart')
     products = models.ManyToManyField(Product, through='ProductInCart')
 
     def calculate_total(self):
@@ -124,7 +125,7 @@ class Cart(models.Model):
         return total
 
     def __str__(self):
-        return f"Cart #{self.id}"
+        return f"{self.customer.user.username}'s cart"
 
 
 class ProductInCart(models.Model):
@@ -149,11 +150,18 @@ class Review(models.Model):
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to='images/', null=True, blank=True)
-    # Add other necessary fields for your application
 
-    # Relationships
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
 
     def __str__(self):
         return f"Review #{self.id}: {self.rating} stars"
+
+    class Meta:
+        unique_together = ['customer', 'product']
+
+
+@receiver(post_save, sender=CustomUser)
+def create_user_cart(sender, instance, created, **kwargs):
+    if created:
+        Cart.objects.create(customer=instance)
