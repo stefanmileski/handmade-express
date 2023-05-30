@@ -6,7 +6,11 @@
 
 {% block content %}
     <div class="text-light">
-        <h1>Orders</h1>
-        <p> Welcome to the orders page!</p>
+        <h3 class="text-success">{{ request.user.profile.display_name }}{% if s_after_apostrophe %}'s
+        {% else %}'
+        {% endif %} Orders</h3>
+        {% for order in orders %}
+            {% include 'ShopApp/includes/order.html' %}
+        {% endfor %}
     </div>
 {% endblock %}

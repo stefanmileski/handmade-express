@@ -14,4 +14,7 @@ urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('orders/', views.orders, name='orders'),
+    path('add_product/', views.add_product_to_shop, name='add_product_to_shop'),
+    path('checkout/', views.checkout, name='checkout'),
+    path('add_to_cart', views.add_to_cart, name='add_to_cart'),
 ]

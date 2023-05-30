@@ -5,8 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <p class="text-light">{{ cart }}</p>
-    {% for product in cart.products %}
-        {% include 'ShopApp/includes/cart_item.html' %}
-    {% endfor %}
+    <h3 class="text-success mb-3">Cart</h3>
+    <div class="d-flex flex-column">
+        {% for item in items %}
+            {% include 'ShopApp/includes/cart_item.html' %}
+        {% endfor %}
+        <h4 class="align-self-end me-3 mt-2 text-light">Total: ${{ total }}</h4>
+        <a class="btn btn-success align-self-end me-3 mt-3" style="font-size: 24px" href='/checkout'>Checkout</a>
+    </div>
 {% endblock %}

@@ -7,8 +7,9 @@ from ShopApp.models import CustomUser, Category, Material, \
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'category', 'material', 'color', 'seller']
-    list_filter = ['category', 'material', 'color', 'seller']
     search_fields = ['name', 'category__name', 'material__name', 'color__name', 'seller__username']
+    prepopulated_fields = {'slug': ('name',)}
+    list_filter = ['category', 'material', 'color', 'seller']
 
     def has_change_permission(self, request, obj=None):
         if obj and (request.user == obj.seller):
@@ -21,6 +22,11 @@ class ProductAdmin(admin.ModelAdmin):
         if obj and (request.user == obj.seller):
             return True
         return False
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    prepopulated_fields = {'slug': ('name',)}
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -42,7 +48,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CustomUser)
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Material)
 admin.site.register(Color)
 admin.site.register(Product, ProductAdmin)

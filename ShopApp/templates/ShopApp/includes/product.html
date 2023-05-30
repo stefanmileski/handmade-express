@@ -14,7 +14,11 @@
                 <p class="align-self-end" style="font-size: 10px">{{ product.sold }} sold</p>
                 <p class="fw-bold align-self-end">${{ product.price }}</p>
             </div>
-            <a href="#" class="btn btn-success">Add to cart</a>
+            <form class="align-self-center w-100" action="{% url 'add_to_cart' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value={{ product.id }}>
+                <button type="submit" class="btn btn-success w-100">Add to cart</button>
+            </form>
         </div>
     </div>
 </div>

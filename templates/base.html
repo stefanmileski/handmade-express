@@ -23,21 +23,50 @@
         </div>
         <div>
             <ul class="navbar-nav">
-                <li class="nav-item me-2">
-                    <a class="nav-link text-light" href="/cart"><img src="../../images/cart_icon.png" width="30px"
-                                                                     alt="Shopping Cart"></a>
-                </li>
-                <li class="nav-item me-2">
-                    <a class="nav-link text-light" href="{% url 'orders' %}">My Orders</a>
-                </li>
-                {% if request.user.id %}
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="{% url 'logout' %}">Log Out</a>
-                </li>
+                {% if not request.user.is_superuser %}
+                    <li class="nav-item me-2">
+                        <a class="nav-link text-light" href="/cart">
+                            <div class="bg-light text-success">{{ request.user.profile.cart.calculate_total_products_quantity }}</div>
+                            <img src="../images/cart_icon.png" width="30px"
+                                 alt="Shopping Cart">
+                        </a>
+                    </li>
+                    <li class="nav-item me-2">
+                        <a class="nav-link text-light" href="{% url 'orders' %}">My Orders</a>
+                    </li>
+                {% endif %}
+                {% if request.user.username %}
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                    {% if not request.user.is_superuser %}
+                        <a href="{% url "seller_profile" request.user.username %}" class="text-decoration-none">
+                            <li class="nav-item d-flex ms-3">
+                                <img src="{{ request.user.profile.image.url }}" height="40px" width="40px"
+                                     alt="{{ request.user.profile.display_name }}"
+                                     class="rounded-circle ms-2">
+                                <p class="text-light ms-2 pt-2">
+                                    {{ request.user.profile.display_name }}
+                                </p>
+                            </li>
+                        </a>
+                    {% endif %}
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="{% url 'login' %}">Log In</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'login' %}">Log In</a>
+                    </li>
+                {% endif %}
+                {% if request.user.is_superuser %}
+                    <a href="{% url 'admin:index' %}" class="text-decoration-none">
+                        <li class="nav-item d-flex ms-3">
+                            <img src="../images/admin.png" height="40px" width="40px"
+                                 alt="{{ request.user.username }}"
+                                 class="rounded-circle ms-2">
+                            <p class="text-light ms-2 pt-2">
+                                {{ request.user.username }}
+                            </p>
+                        </li>
+                    </a>
                 {% endif %}
             </ul>
         </div>
