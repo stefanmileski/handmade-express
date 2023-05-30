@@ -5,10 +5,18 @@
 
 Продавница за рачно изработени производи
 
-![image](https://github.com/stefanmileski/handmade-express/assets/52272289/0ef69b65-9401-418b-b568-cc209166232b)
+![image](https://github.com/stefanmileski/handmade-express/assets/52272289/089f9bbe-2dbe-4644-ad24-121aff766da2)
 
-![image](https://github.com/stefanmileski/handmade-express/assets/52272289/2a77c68f-f20f-4703-87b0-b108274bb4c6)
+![image](https://github.com/stefanmileski/handmade-express/assets/52272289/6fe2df84-cf1c-4961-8ceb-ad7ec39c86d6)
 
-![image](https://github.com/stefanmileski/handmade-express/assets/52272289/14d788b1-cc04-46a1-88e9-502b0451f0b2)
+![image](https://github.com/stefanmileski/handmade-express/assets/52272289/aa9d2c9f-d89b-4d8b-83b0-5d90583d4582)
 
-![image](https://github.com/stefanmileski/handmade-express/assets/52272289/0363aa79-81cd-4bd6-bf07-3b7526739a30)
+![image](https://github.com/stefanmileski/handmade-express/assets/52272289/cbdc59e7-1ccb-4778-9303-1afa89745fdc)
+
+![image](https://github.com/stefanmileski/handmade-express/assets/52272289/d1c0e98d-e2ed-47ca-bc4d-b339a6b39b5e)
+
+![image](https://github.com/stefanmileski/handmade-express/assets/52272289/c0370be1-3dff-4edb-a2b9-22feec303899)
+
+![image](https://github.com/stefanmileski/handmade-express/assets/52272289/04cce0b5-77a7-482f-9779-f5749736f264)
+
+![image](https://github.com/stefanmileski/handmade-express/assets/52272289/e390ad97-9d71-46fd-a8e6-8c1d667a377e)
