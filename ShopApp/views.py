@@ -1,5 +1,3 @@
-import random
-
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
@@ -72,7 +70,7 @@ def seller_profile(request, seller_username):
 
 def cart(request):
     user_cart = Cart.objects.get(customer__user__username=request.user.username)
-    items = user_cart.product_in_cart.all()
+    items = user_cart.products_in_cart.all()
     return render(request, 'ShopApp/cart.html', {
         "items": items,
         "total": user_cart.calculate_total(),
@@ -125,7 +123,7 @@ def add_product_to_shop(request):
 
 def checkout(request):
     user_cart = Cart.objects.get(customer__user__username=request.user.username)
-    items = user_cart.product_in_cart.all()
+    items = user_cart.products_in_cart.all()
     Order(customer=request.user.profile).save()
     for item in items:
         ProductInOrder(product=item.product, order=request.user.profile.orders.last(), quantity=item.quantity).save()
@@ -144,9 +142,9 @@ def add_to_cart(request):
     else:
         quantity = 1
     if ProductInCart.objects.filter(product=product, cart=user_cart).exists():
-        product_in_cart = ProductInCart.objects.get(product=product, cart=user_cart)
-        product_in_cart.quantity += quantity
-        product_in_cart.save()
+        products_in_cart = ProductInCart.objects.get(product=product, cart=user_cart)
+        products_in_cart.quantity += quantity
+        products_in_cart.save()
     else:
         ProductInCart(product=product, cart=user_cart, quantity=quantity).save()
     return redirect(request.META['HTTP_REFERER'])

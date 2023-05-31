@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name='review',
-            name='images',
+            name='uploaded',
             field=models.ManyToManyField(blank=True, null=True, to='ShopApp.image'),
         ),
     ]

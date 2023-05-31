@@ -11,10 +11,10 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     list_filter = ['category', 'material', 'color', 'seller']
 
-    def has_change_permission(self, request, obj=None):
-        if obj and (request.user == obj.seller):
-            return True
-        return False
+    # def has_change_permission(self, request, obj=None):
+    #     if obj and (request.user == obj.seller):
+    #         return True
+    #     return False
 
     def has_delete_permission(self, request, obj=None):
         if request.user.is_superuser:

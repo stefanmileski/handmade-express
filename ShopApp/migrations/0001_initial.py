@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
             name='Image',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='images/')),
+                ('image', models.ImageField(upload_to='uploaded/')),
             ],
         ),
         migrations.CreateModel(
@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField()),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ShopApp.category')),
                 ('color', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ShopApp.color')),
-                ('images', models.ManyToManyField(to='ShopApp.image')),
+                ('uploaded', models.ManyToManyField(to='ShopApp.image')),
                 ('material', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ShopApp.material')),
                 ('seller', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products', to='ShopApp.customuser')),
             ],
@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
                 ('rating', models.PositiveIntegerField()),
                 ('comment', models.TextField()),
                 ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ShopApp.customuser')),
-                ('images', models.ManyToManyField(to='ShopApp.image')),
+                ('uploaded', models.ManyToManyField(to='ShopApp.image')),
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ShopApp.product')),
             ],
         ),

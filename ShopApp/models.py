@@ -15,7 +15,7 @@ class CustomUser(models.Model):
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
     display_name = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images/', default='images/default.png')
+    image = models.ImageField(upload_to='uploaded/', default='default.png')
 
     def __str__(self):
         return f"{self.display_name} ({self.user.username})"
@@ -51,7 +51,7 @@ class Product(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=10, validators=[MinValueValidator(0)])
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     description = models.TextField()
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to='uploaded/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
@@ -67,6 +67,10 @@ class Product(models.Model):
         for review in self.reviews.all():
             total += review.rating
         return total / len(self.reviews.all()) if len(self.reviews.all()) > 0 else 0
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.name)
@@ -86,7 +90,7 @@ class Order(models.Model):
 
     def calculate_total(self):
         total = 0
-        for product_in_order in self.product_in_order.all():
+        for product_in_order in self.products_in_order.all():
             total += product_in_order.subtotal()
         return total
 
@@ -95,7 +99,7 @@ class Order(models.Model):
 
 
 class ProductInOrder(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='product_in_order')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='products_in_order')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
@@ -119,19 +123,19 @@ class Cart(models.Model):
     def calculate_total(self):
         # Perform the necessary calculations to get the total price
         total = 0
-        for product_in_cart in self.product_in_cart.all():
+        for product_in_cart in self.products_in_cart.all():
             total += product_in_cart.subtotal()
         return total
 
     def calculate_total_products_quantity(self):
-        return len(self.product_in_cart.all())
+        return len(self.products_in_cart.all())
 
     def __str__(self):
         return f"{self.customer.user.username}'s cart"
 
 
 class ProductInCart(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='product_in_cart')
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products_in_cart')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
@@ -151,7 +155,7 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    image = models.ImageField(upload_to='uploaded/', null=True, blank=True)
 
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')

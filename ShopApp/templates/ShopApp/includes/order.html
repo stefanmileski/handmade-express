@@ -6,7 +6,7 @@
         <p>Order Total: ${{ order.calculate_total }}</p>
         <p>Order Items:</p>
         <ul>
-            {% for item in order.product_in_order.all %}
+            {% for item in order.products_in_order.all %}
                 <li>{{ item.product.name }} - ${{ item.product.price }} - x{{ item.quantity }}</li>
             {% endfor %}
         </ul>

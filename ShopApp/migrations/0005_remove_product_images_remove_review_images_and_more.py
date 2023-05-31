@@ -12,22 +12,22 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='product',
-            name='images',
+            name='uploaded',
         ),
         migrations.RemoveField(
             model_name='review',
-            name='images',
+            name='uploaded',
         ),
         migrations.AddField(
             model_name='product',
             name='image',
-            field=models.ImageField(default=0, upload_to='images/'),
+            field=models.ImageField(default=0, upload_to='uploaded/'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='review',
             name='image',
-            field=models.ImageField(blank=True, null=True, upload_to='images/'),
+            field=models.ImageField(blank=True, null=True, upload_to='uploaded/'),
         ),
         migrations.DeleteModel(
             name='Image',
