@@ -2,8 +2,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 
-from ShopApp.forms import ProductForm
-from ShopApp.models import Category, Product, CustomUser, Cart, Material, Color, Order, ProductInOrder, ProductInCart
+from ShopApp.forms import ProductForm, ReviewForm
+from ShopApp.models import Category, Product, CustomUser, Cart, Order, ProductInOrder, ProductInCart, Review
 
 from django.db.models import Q
 
@@ -26,9 +26,9 @@ def products(request):
     })
 
 
-def product_detail(request, seller_username, slug):
+def product_detail(request, slug):
     return render(request, 'ShopApp/product_detail.html', {
-        "product": Product.objects.get(seller__user__username=seller_username, slug=slug)
+        "product": Product.objects.get(slug=slug)
     })
 
 
@@ -104,7 +104,9 @@ def add_product_to_shop(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)
+            product.seller = request.user.profile
+            product.save()
         return redirect(f"/seller/{request.user.username}")
     else:
         form = ProductForm()
@@ -140,3 +142,24 @@ def add_to_cart(request):
     else:
         ProductInCart(product=product, cart=user_cart, quantity=quantity).save()
     return redirect(request.META['HTTP_REFERER'])
+
+
+def add_review_to_product(request):
+    product = Product.objects.get(id=request.POST.get('product_id'))
+    form = ReviewForm()
+    return render(request, 'ShopApp/add_review_form.html', {
+        "product": product,
+        "form": form,
+    })
+
+
+def save_review(request):
+    form = ReviewForm(request.POST)
+    review = form.save(commit=False)
+    product = Product.objects.get(id=request.POST.get('product_id'))
+    customer = request.user.profile
+    review.customer = customer
+    review.product = product
+    review.save()
+    return redirect(f"/reviews/{request.POST.get('product_slug')}")
+

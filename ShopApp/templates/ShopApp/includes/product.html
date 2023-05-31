@@ -1,10 +1,10 @@
 <div class="card bg-light me-3" style="width: 13rem;">
-    <a href="{% url 'product_detail' product.seller.user.username product.slug %}">
+    <a href="{% url 'product_detail' product.slug %}">
         <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
     </a>
     <div class="card-body d-flex flex-column justify-content-between">
         <div>
-            <a href="{% url 'product_detail' product.seller.user.username product.slug %}" class="text-decoration-none text-success">
+            <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none text-success">
                 <h6 class="fw-bold card-title">{{ product.name }}</h6>
             </a>
         </div>

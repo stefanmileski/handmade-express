@@ -58,7 +58,10 @@ class Product(models.Model):
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='products')
     created_at = models.DateTimeField(auto_now_add=True)
     sold = models.IntegerField(default=0)
-    slug = models.SlugField(default="", blank=True, unique=True, db_index=True)
+    slug = models.SlugField(default="", blank=True, db_index=True)
+
+    class Meta:
+        unique_together = ['seller', 'slug']
 
     def calculate_average_rating(self):
         if len(self.reviews.all()) == 0:
