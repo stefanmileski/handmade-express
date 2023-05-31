@@ -2,6 +2,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 
+from ShopApp.forms import ProductForm
 from ShopApp.models import Category, Product, CustomUser, Cart, Material, Color, Order, ProductInOrder, ProductInCart
 
 from django.db.models import Q
@@ -25,9 +26,9 @@ def products(request):
     })
 
 
-def product_detail(request, slug):
+def product_detail(request, seller_username, slug):
     return render(request, 'ShopApp/product_detail.html', {
-        "product": Product.objects.get(slug=slug)
+        "product": Product.objects.get(seller__user__username=seller_username, slug=slug)
     })
 
 
@@ -101,23 +102,14 @@ def orders(request):
 
 def add_product_to_shop(request):
     if request.method == 'POST':
-        product = Product()
-        product.name = request.POST.get('name')
-        product.description = request.POST.get('description')
-        product.price = request.POST.get('price')
-        product.category = Category.objects.get(name=request.POST.get('category'))
-        product.material = Material.objects.get(name=request.POST.get('material'))
-        product.color = Color.objects.get(name=request.POST.get('color'))
-        product.image = request.FILES.get('image')
-        product.quantity = request.POST.get('quantity')
-        product.seller = request.user.profile
-        product.save()
-        return redirect('/')
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        return redirect(f"/seller/{request.user.username}")
     else:
+        form = ProductForm()
         return render(request, 'ShopApp/add_product_form.html', {
-            "categories": Category.objects.all(),
-            "materials": Material.objects.all(),
-            "colors": Color.objects.all(),
+            "form": form
         })
 
 
