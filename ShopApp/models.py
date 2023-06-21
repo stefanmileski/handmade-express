@@ -130,8 +130,9 @@ class Cart(models.Model):
             total += product_in_cart.subtotal()
         return total
 
-    def calculate_total_products_quantity(self):
-        return len(self.products_in_cart.all())
+    @property
+    def total_products_quantity(self):
+        return self.products_in_cart.count()
 
     def __str__(self):
         return f"{self.customer.user.username}'s cart"

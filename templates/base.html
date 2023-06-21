@@ -27,7 +27,7 @@
                 {% if not request.user.is_superuser %}
                     <li class="nav-item me-2">
                         <a class="nav-link text-light" href="/cart">
-                            <div class="bg-light text-success">{{ request.user.profile.cart.calculate_total_products_quantity }}</div>
+                            <div class="bg-light text-success">{{ request.user.profile.cart.total_products_quantity }}</div>
                             <img src="{% static "images/cart_icon.png" %}" width="30px"
                                  alt="Shopping Cart">
                         </a>
