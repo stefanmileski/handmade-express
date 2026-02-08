@@ -1,6 +1,6 @@
 # handmade-express
 
-An online andmade product store, created in Django.
+An online handmade product store, created in Django.
 
 ![image](https://github.com/stefanmileski/handmade-express/assets/52272289/089f9bbe-2dbe-4644-ad24-121aff766da2)
 
