@@ -1,6 +1,6 @@
 # handmade-express
 
-An online handmade product store, created in Django. Includes features like a shopping cart, reviews, ratings, order list...
+An online handmade product store, created in Django. Includes features like a shopping cart, reviews, ratings, order list, dynamic addition of products...
 
 ![image](https://github.com/stefanmileski/handmade-express/assets/52272289/089f9bbe-2dbe-4644-ad24-121aff766da2)
 
